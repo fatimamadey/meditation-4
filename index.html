@@ -1,0 +1,76 @@
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js?v=1"></script>
+<!--API: https://www.themealdb.com/api.php-->
+	<script>
+  /* global nn */
+  
+  // const url = 'https://www.themealdb.com/api/json/v1/1/random.php' // generates a random recipe
+  const url = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772' // for testing
+  
+  let meal
+  let meal_name // list split by word
+  let area
+  let ingredients = []
+  let measurements = []
+  let instructions // list, split by sentence
+  let img_url
+  
+  async function getRandomRecipe() {
+    const res = await fetch(url) 
+	    const json = await res.json()
+    meal = json.meals[0]
+    meal_name = meal.strMeal.split(" ")
+    area = meal.strArea
+    // empty arrays
+    ingredients = []
+    measurements = []
+    for (let i = 0; i < 20; i++) {
+      let ingredient = "strIngredient" + (i + 1)
+      let measurement = "strMeasure" + (i + 1)
+      if (meal[ingredient]){ // removes empty strings and null values
+        ingredients.push(meal[ingredient])
+      }
+      if (meal[measurement]){
+        measurements.push(meal[measurement])
+      }
+    }
+    instructions = meal.strInstructions.split(".")
+    img_url = meal.strMealThumb
+  }
+  
+	  async function setup () {
+    // get the first 1/4 of a recipe
+	    await getRandomRecipe()
+    console.log("meal:", meal_name)
+    console.log("area:", area)
+    console.log("ingredients:", ingredients)
+    console.log("measurements:", measurements)
+    console.log("instructions:", instructions)
+    console.log("DONE")
+    await getRandomRecipe()
+    console.log("meal:", meal_name)
+    console.log("area:", area)
+    console.log("ingredients:", ingredients)
+    console.log("measurements:", measurements)
+    console.log("instructions:", instructions)
+    console.log("DONE")
+    await getRandomRecipe()
+    console.log("meal:", meal_name)
+    console.log("area:", area)
+    console.log("ingredients:", ingredients)
+    console.log("measurements:", measurements)
+    console.log("instructions:", instructions)
+    console.log("DONE")
+    await getRandomRecipe()
+    console.log("meal:", meal_name)
+    console.log("area:", area)
+    console.log("ingredients:", ingredients)
+    console.log("measurements:", measurements)
+    console.log("instructions:", instructions)
+    console.log("DONE")
+	    // let image = nn.create('img')
+	    //   .set('src', img_url)
+	    //   .addTo('body')
+	  }
+	  
+	nn.on('load', setup)
+	</script>
