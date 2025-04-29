@@ -38,38 +38,57 @@
     return nn.random(arr)
   }
   
+  // frakenstein the recipe
+  let mealName = "" // choose one word from each meal
+  let mealArea= "" // combine all the areas in the meals, removed duplicartes and add fusion at the end
+  let mealIngredients = [] // pick 8 random ingredients w/measuments
+  let mealMeasurements = []
+  let mealInstructions = "" // pick 8  random instructions
+  function getIngredients(){
+    for(let i = 0; i < 4; i++){
+      let ingrd = nn.random(allMeals[i].ingredients)
+      while (mealIngredients.includes(ingrd)){
+        ingrd = nn.random(allMeals[i].ingredients)
+      }
+      mealIngredients.push(ingrd)
+
+      let measurement = "to your hearts content🤌"
+      let possibleMeasurement = nn.random(allMeals[i].measurements)
+      if(possibleMeasurement != " "){
+        measurement = possibleMeasurement
+      }
+      mealMeasurements.push(measurement)
+      mealInstructions += nn.random(allMeals[i].instructions) + ". "
+    }
+  }
+  
 	  async function setup () {
     // get the info for 4 recipe
     for(let i = 0; i < 4; i++){
       const meal = await getRandomRecipe()
       allMeals.push(meal)
     }
-    console.log("All meals fetched:", allMeals)
-      
-    // frakenstein the recipe
-    let mealName = "" // choose one word from each meal
-    let mealArea= "" // combine all the areas in the meals, removed duplicartes and add fusion at the end
-    let mealIngredients = [] // pick 8 random ingredients w/measuments
-    let mealInstructions = "" // pick 8  random instructions
+    // console.log("All meals fetched:", allMeals)
     
     for(let i = 0; i < 4; i++){
       mealName += nn.random(allMeals[i].name).toUpperCase() + " "
-      
-      mealArea += allMeals[i].area + " "
-      
-      
-      mealIngredients.push(nn.random(allMeals[i].ingredients) + " --- " + nn.random(allMeals[i].measurements))
-      mealInstructions += nn.random(allMeals[i].instructions) + ". "
-      
-      
-      mealIngredients.push(nn.random(allMeals[i].ingredients) + " --- " + nn.random(allMeals[i].measurements))
-      mealInstructions += nn.random(allMeals[i].instructions) + ". "
+      if(!mealArea.includes(allMeals[i].area)){
+        mealArea += allMeals[i].area + " "
+      }
+      getIngredients()
     }
-    console.log("Title:", mealName)
+    // console.log("Title:", mealName)
     mealArea += "Fusion"
-    console.log("Cusine:", mealArea)
-    console.log("Ingredients:", mealIngredients)
-    console.log("Instructions:", mealInstructions)
+    // console.log("Cusine:", mealArea)
+    let ingredients = []
+    for (let i = 0; i < mealIngredients.length; i++) {
+      let ingredient = ""
+      ingredient += mealIngredients[i] + " --- " + mealMeasurements[i]
+      ingredients.push(ingredient)
+    }
+    mealIngredients = ingredients
+    // console.log("Ingredients:", mealIngredients)
+    // console.log("Instructions:", mealInstructions)
 
   // recipe card container
   let recipeBox = nn.create('div')
@@ -79,7 +98,7 @@
       padding: '20px',
       borderRadius: '20px',
       width: '600px',
-      fontFamily: 'Comic Sans MS, cursive, sans-serif',
+      fontFamily: 'Comic Sans MS',
       margin: '20px auto',
       textAlign: 'center'
     })
@@ -125,7 +144,7 @@
 
   // cuisine
   nn.create('p')
-    .content(`👩‍🍳 Cuisine Type: ${mealArea}`)
+    .content(`👩‍🍳 Cuisine: ${mealArea}`)
     .css({ fontSize: '14px', color: '#555' })
     .addTo(recipeBox);
 
